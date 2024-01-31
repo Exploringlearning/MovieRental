@@ -7,8 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes(engine *gin.Engine) {
-	// engine.GET("/hello", hello)
+func RegisterRoutes(engine *gin.Engine) {	
 	movieService := services.NewMovie()
 	movieHandler := handler.NewMovie(movieService)
 	engine.GET("/", movieHandler.Get)
