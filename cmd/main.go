@@ -1,9 +1,15 @@
-
 package main
 
-import "fmt"
+import (
+	"movierental/internal/routes"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	fmt.Println ("Hello world")
-	fmt.Println("Bye")
+
+	engine := gin.Default()
+	//engine.GET("/", hello)
+	routes.RegisterRoutes(engine)
+	engine.Run("localhost:8080")
 }	
