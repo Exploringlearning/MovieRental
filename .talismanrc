@@ -7,4 +7,6 @@ fileignoreconfig:
   checksum: 27e6d429a9151372977893fcf18afd2bfa12358b05a21d33908cc8936c9e2bff
 - filename: internal/db/dbConfig.go
   checksum: 3e75b657462697053dde5786ffaaeb1732d483584df88ac4aa5d5de344f99a07
+- filename: internal/db/migrations/20240201150040_insert_table_movies.up.sql
+  checksum: 8da220a9f7dbf9ddf7ade4a3c8d9152afcb6bbeee9e2a4df8d1bca77c157c7f9
 version: "1.0"

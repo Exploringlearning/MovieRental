@@ -3,11 +3,11 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	
-	"github.com/golang-migrate/migrate/v4/database/postgres"
-	_ "github.com/lib/pq"
+
 	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
 	_ "github.com/mattes/migrate/source/file"
 	"log"
 )
@@ -44,15 +44,18 @@ func CreateConnection() *sql.DB {
 func Migrate(dbConn *sql.DB) error {
 	driver, err := postgres.WithInstance(dbConn, &postgres.Config{})
 	if err != nil {
-		log.Print("Driver not instantiated ", err)
+		log.Println("Driver not instantiated ", err)
 		return err
 	}
 	m, err := migrate.NewWithDatabaseInstance("file://internal/db/migrations", NewConfig().DBName, driver)
 	if err != nil {
-		log.Print("Migration with Database not instantiated ", err)
+		log.Fatalln("Migration with Database not instantiated ", err)
 		return err
 	}
-	m.Up()
-	log.Print("Migration Successfull")
+	if err := m.Up(); err != nil {
+		log.Println("Error occurred while migrating the database", err.Error())
+		return err
+	}
+	log.Print("Migration completed Successfully!")
 	return nil
 }
