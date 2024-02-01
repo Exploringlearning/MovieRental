@@ -26,6 +26,5 @@ func NewConfig() *Config {
 	if err != nil {
 		log.Fatal("Environment can't be loaded: ", err)
 	}
-	log.Println(config)
 	return &config
 }
