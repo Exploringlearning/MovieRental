@@ -1,1 +1,3 @@
-DROP TABLE Movies;
+DROP TABLE IF EXISTS Movies;
+
+COMMIT;

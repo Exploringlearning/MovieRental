@@ -7,3 +7,5 @@ CREATE TABLE Movies (
     Poster varchar(255),  
     PRIMARY KEY (ID)
 );
+
+Commit;

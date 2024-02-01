@@ -1,0 +1,3 @@
+DELETE FROM Movies WHERE ID = {1,2,3};
+
+COMMIT;
