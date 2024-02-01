@@ -39,7 +39,7 @@ func (movie *movie) Get() ([]dto.Movie, error) {
 }
 
 
-func serializeJsonToPageDto(body []byte, movies ...any) {
+func serializeJsonToPageDto(body []byte, movies *dto.MovieSearch) {
 	if err := json.Unmarshal(body, &movies); err != nil {
 		log.Fatalln(err)
 	}
