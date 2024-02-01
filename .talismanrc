@@ -1,4 +1,10 @@
 fileignoreconfig:
+- filename: configs/config.yaml
+  checksum: a14efd64d9c0fa6ca42092a661b363e1fda281f18dc90b5eb5588605ad4f6537
 - filename: go.sum
-  checksum: f8950f09021b73bd9b373cc094bdbdc7f1abf1dca156c90f9ef4cf0301a20a14
+  checksum: 3022568da63e3a9b2481fda83dc5b262269e1a2f2b47deb72eaa5274439cf54d
+- filename: internal/db/database.go
+  checksum: 27e6d429a9151372977893fcf18afd2bfa12358b05a21d33908cc8936c9e2bff
+- filename: internal/db/dbConfig.go
+  checksum: 3e75b657462697053dde5786ffaaeb1732d483584df88ac4aa5d5de344f99a07
 version: "1.0"
