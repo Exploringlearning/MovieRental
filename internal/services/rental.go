@@ -10,5 +10,5 @@ func NewMovie() Movie {
 	return &movie{}
 }
 func (movie *movie) Get() (string, error) {
-	return "Hello World", nil
+	return "hello, World", nil
 }
