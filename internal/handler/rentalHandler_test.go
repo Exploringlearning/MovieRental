@@ -30,6 +30,7 @@ func TestShouldReturnListOfMovies(t *testing.T) {
 	mockRepo := mocks.Movie{}
 	movies := []dto.Movie{
 		{
+			ID:       1,
 			Title:    "The Wolf of Wall Street",
 			Year:     "2013",
 			Rated:    "R",
@@ -62,6 +63,7 @@ func TestShouldReturnListOfMovies(t *testing.T) {
 			Response:   "True",
 		},
 		{
+			ID:       2,
 			Title:    "Interstellar",
 			Year:     "2014",
 			Rated:    "PG-13",

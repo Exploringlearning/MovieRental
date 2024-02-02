@@ -40,6 +40,7 @@ func (m *movie) scanMovie(rows *sql.Rows, err error) ([]dto.Movie, error) {
 	for rows.Next() {
 		var movie dto.Movie
 		if err = rows.Scan(
+			&movie.ID,
 			&movie.Title,
 			&movie.Year,
 			&movie.Rated,

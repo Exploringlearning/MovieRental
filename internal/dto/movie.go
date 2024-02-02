@@ -1,6 +1,7 @@
 package dto
 
 type Movie struct {
+	ID         int      `json:"id"`
 	Title      string   `json:"Title"`
 	Year       string   `json:"Year"`
 	Rated      string   `json:"Rated"`
