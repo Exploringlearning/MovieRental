@@ -24,3 +24,28 @@ func (movie *movie) Get() ([]dto.Movie, error) {
 	}
 	return movies, nil
 }
+
+//func fetchMovies() ([]dto.Movie, error) {
+//
+//	var movies []dto.Movie
+//
+//	resp, err := http.Get("http://www.omdbapi.com/?apikey=633cf963&s=spiderman")
+//	if err != nil {
+//		log.Print("Not able to get the HTTP response ", err)
+//	}
+//	body, err := io.ReadAll(resp.Body)
+//	if err != nil {
+//		log.Fatalln(err)
+//	}
+//	serializeJsonToPageDto(body, &movies)
+//
+//	log.Println("Final list:", movies)
+//	return movies, nil
+//}
+//
+//func serializeJsonToPageDto(body []byte, movies *[]dto.Movie) {
+//	if err := json.Unmarshal(body, &movies); err != nil {
+//		log.Fatalln(err)
+//	}
+//
+//}
