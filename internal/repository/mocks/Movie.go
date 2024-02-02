@@ -13,15 +13,19 @@ type Movie struct {
 	mock.Mock
 }
 
-// Get provides a mock function with given fields:
-func (_m *Movie) Get() []dto.Movie {
+// GetAll provides a mock function with given fields:
+func (_m *Movie) GetAll() ([]dto.Movie, error) {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for Get")
+		panic("no return value specified for GetAll")
 	}
 
 	var r0 []dto.Movie
+	var r1 error
+	if rf, ok := ret.Get(0).(func() ([]dto.Movie, error)); ok {
+		return rf()
+	}
 	if rf, ok := ret.Get(0).(func() []dto.Movie); ok {
 		r0 = rf()
 	} else {
@@ -30,7 +34,13 @@ func (_m *Movie) Get() []dto.Movie {
 		}
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // NewMovie creates a new instance of Movie. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.

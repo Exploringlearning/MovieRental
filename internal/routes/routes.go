@@ -1,11 +1,11 @@
 package routes
 
 import (
+	"github.com/gin-gonic/gin"
 	"movierental/internal/db"
 	"movierental/internal/handler"
 	"movierental/internal/repository"
 	"movierental/internal/services"
-	"github.com/gin-gonic/gin"
 )
 
 func RegisterRoutes(engine *gin.Engine) {
