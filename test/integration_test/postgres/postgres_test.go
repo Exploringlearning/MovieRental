@@ -3,13 +3,14 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"log"
+	"testing"
+
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"
-	"log"
-	"testing"
 )
 
 func setupPostgresContainer(t *testing.T) (testcontainers.Container, string) {

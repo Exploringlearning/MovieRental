@@ -7,6 +7,7 @@ import (
 
 type Movie interface {
 	Get() ([]dto.Movie, error)
+	GetMoviesByFilter(string) ([]dto.Movie, error)
 }
 
 type movie struct {
@@ -23,6 +24,14 @@ func (movie *movie) Get() ([]dto.Movie, error) {
 		return nil, err
 	}
 	return movies, nil
+}
+
+func (movie *movie) GetMoviesByFilter(genre string) ([]dto.Movie, error) {
+	movies, err := movie.rentalRepository.GetMoviesByFilter(genre)
+    if err!= nil {
+        return nil, err
+    }
+    return movies, nil
 }
 
 //func fetchMovies() ([]dto.Movie, error) {

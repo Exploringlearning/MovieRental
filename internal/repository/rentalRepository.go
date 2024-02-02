@@ -8,6 +8,7 @@ import (
 
 type Movie interface {
 	GetAll() ([]dto.Movie, error)
+	GetMoviesByFilter(string) ([]dto.Movie, error)
 }
 
 type movie struct {
@@ -26,7 +27,7 @@ func (m *movie) GetAll() ([]dto.Movie, error) {
 	}
 	defer rows.Close()
 
-	movies, err := m.scanMovie(rows, err)
+	movies, err := m.scanMovie(rows)
 	if err != nil {
 		return nil, err
 	}
@@ -34,12 +35,30 @@ func (m *movie) GetAll() ([]dto.Movie, error) {
 	return movies, nil
 }
 
-func (m *movie) scanMovie(rows *sql.Rows, err error) ([]dto.Movie, error) {
+func (m *movie) GetMoviesByFilter(genre string)([]dto.Movie, error){
+	
+	rows, err := m.DB.Query("SELECT * from movies where genre = ?",genre)
+
+	if err != nil {
+		log.Println("Error occurred while fetching movies from database", err.Error())
+		return nil, err
+	}
+	defer rows.Close()
+
+	movies, err := m.scanMovie(rows)
+	if err != nil {
+		return nil, err
+	}	
+
+	return movies,nil
+}
+
+func (m *movie) scanMovie(rows *sql.Rows) ([]dto.Movie, error) {
 	var movies []dto.Movie
 
 	for rows.Next() {
 		var movie dto.Movie
-		if err = rows.Scan(
+		if err := rows.Scan(
 			&movie.ID,
 			&movie.Title,
 			&movie.Year,

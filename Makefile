@@ -10,8 +10,10 @@ run-without-build:
 run: build
 	./${BINARY_DIRECTORY}
 
-test:
-	go test ./...
+# test:
+#    export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+#    export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="/var/run/docker.sock"
+# 	go test ./...
 
 dep:
 	go mod download
