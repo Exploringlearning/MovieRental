@@ -26,16 +26,49 @@ func (m *movie) GetAll() ([]dto.Movie, error) {
 	}
 	defer rows.Close()
 
+	movies, err := m.scanMovie(rows, err)
+	if err != nil {
+		return nil, err
+	}
+
+	return movies, nil
+}
+
+func (m *movie) scanMovie(rows *sql.Rows, err error) ([]dto.Movie, error) {
 	var movies []dto.Movie
 
 	for rows.Next() {
 		var movie dto.Movie
-		if err = rows.Scan(&movie.ID, &movie.Title, &movie.Year, &movie.ImdbId, &movie.Type, &movie.Poster); err != nil {
+		if err = rows.Scan(
+			&movie.Title,
+			&movie.Year,
+			&movie.Rated,
+			&movie.Released,
+			&movie.Runtime,
+			&movie.Genre,
+			&movie.Director,
+			&movie.Writer,
+			&movie.Actors,
+			&movie.Plot,
+			&movie.Language,
+			&movie.Country,
+			&movie.Awards,
+			&movie.Poster,
+			&movie.Metascore,
+			&movie.ImdbRating,
+			&movie.ImdbVotes,
+			&movie.ImdbID,
+			&movie.Type,
+			&movie.DVD,
+			&movie.BoxOffice,
+			&movie.Production,
+			&movie.Website,
+			&movie.Response,
+		); err != nil {
 			log.Println("Error occurred while serializing movies from result", err.Error())
 			return nil, err
 		}
 		movies = append(movies, movie)
 	}
-
 	return movies, nil
 }

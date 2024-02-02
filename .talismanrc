@@ -7,6 +7,10 @@ fileignoreconfig:
   checksum: 27e6d429a9151372977893fcf18afd2bfa12358b05a21d33908cc8936c9e2bff
 - filename: internal/db/dbConfig.go
   checksum: 3e75b657462697053dde5786ffaaeb1732d483584df88ac4aa5d5de344f99a07
+- filename: internal/db/migrations/20240201103359_create_table_movies.up.sql
+  checksum: d9227fdb26472e057ade55aaff7a6291e5371896dc7329f27774bf3009eb4650
 - filename: internal/db/migrations/20240201150040_insert_table_movies.up.sql
-  checksum: 8da220a9f7dbf9ddf7ade4a3c8d9152afcb6bbeee9e2a4df8d1bca77c157c7f9
+  checksum: b4df3b7745a1d5f1c4ab865744c0e87e200c95e5d30c48373cadacd409f995b0
+- filename: internal/handler/rentalHandler_test.go
+  checksum: ee33f8612eda0b170b4aa95dfecfcdcb361e8990920f57639a9cb4ea3855a07a
 version: "1.0"
