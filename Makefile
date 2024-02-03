@@ -1,5 +1,9 @@
 
 BINARY_DIRECTORY = "bin/movierental"
+HOME_PATH = $(shell echo $$HOME)
+export DOCKER_HOST=unix://${HOME_PATH}/.colima/default/docker.sock
+export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE=/var/run/docker.sock
+
 
 build:
 	go build -o ${BINARY_DIRECTORY} ./cmd
@@ -10,10 +14,11 @@ run-without-build:
 run: build
 	./${BINARY_DIRECTORY}
 
-# test:
-#    export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
-#    export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="/var/run/docker.sock"
-# 	go test ./...
+unit-test:
+	go test ./internal/...
+
+integration-test:
+	go test -v ./test/integration_test/...
 
 dep:
 	go mod download
