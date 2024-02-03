@@ -19,14 +19,14 @@ func SetUp() *sql.DB {
 }
 
 func CreateConnection() *sql.DB {
-	dbConfig := NewConfig()
+	dbConfig := NewDatabaseConfig()
 	dataSourceName := fmt.Sprintf(
 		"postgres://%s:%d/%s?user=%s&password=%s&sslmode=disable",
-		dbConfig.DBHost,
-		dbConfig.DBPort,
-		dbConfig.DBName,
-		dbConfig.DBUser,
-		dbConfig.DBPassword,
+		dbConfig.Host,
+		dbConfig.Port,
+		dbConfig.Database,
+		dbConfig.User,
+		dbConfig.Password,
 	)
 
 	dbConn, err := sql.Open("postgres", dataSourceName)
@@ -47,7 +47,7 @@ func Migrate(dbConn *sql.DB) error {
 		log.Println("Driver not instantiated ", err)
 		return err
 	}
-	m, err := migrate.NewWithDatabaseInstance("file://internal/db/migrations", NewConfig().DBName, driver)
+	m, err := migrate.NewWithDatabaseInstance("file://internal/db/migrations", NewDatabaseConfig().Database, driver)
 	if err != nil {
 		log.Fatalln("Migration with Database not instantiated ", err)
 		return err

@@ -1,4 +1,8 @@
 fileignoreconfig:
+- filename: .env
+  checksum: 3c70dc0fb896f8989f909801556cf1b288b7abac3dfebde615cb8eebdbf987b5
+- filename: cmd/main.go
+  checksum: 1843f09ca23274590386fd2625aa65fe4090fbb47afaf846b31a78f8ee814fe3
 - filename: configs/config.yaml
   checksum: a14efd64d9c0fa6ca42092a661b363e1fda281f18dc90b5eb5588605ad4f6537
 - filename: go.sum
@@ -6,7 +10,7 @@ fileignoreconfig:
 - filename: internal/db/database.go
   checksum: 27e6d429a9151372977893fcf18afd2bfa12358b05a21d33908cc8936c9e2bff
 - filename: internal/db/dbConfig.go
-  checksum: 3e75b657462697053dde5786ffaaeb1732d483584df88ac4aa5d5de344f99a07
+  checksum: 144b8d9bfe0de0a32ae5bcda2f820492811fac0139f4ea8bdca329cb8473bd70
 - filename: internal/db/migrations/20240201103359_create_table_movies.up.sql
   checksum: d9227fdb26472e057ade55aaff7a6291e5371896dc7329f27774bf3009eb4650
 - filename: internal/db/migrations/20240201150040_insert_table_movies.up.sql

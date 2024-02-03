@@ -1,30 +1,30 @@
 package db
 
 import (
-	"github.com/spf13/viper"
-	"log"
+	"os"
+	"strconv"
 )
 
-type Config struct {
-	DBHost     string `mapstructure:"DB_HOST"`
-	DBPort     int    `mapstructure:"DB_PORT"`
-	DBUser     string `mapstructure:"DB_USER"`
-	DBPassword string `mapstructure:"DB_PASSWORD"`
-	DBName     string `mapstructure:"DB_NAME"`
+type DatabaseConfig struct {
+	Host     string
+	Port     int
+	User     string
+	Password string
+	Database string
 }
 
-func NewConfig() *Config {
-	config := Config{}
-	viper.SetConfigFile("configs/config.yaml")
+func NewDatabaseConfig() *DatabaseConfig {
+	host := os.Getenv("DB_HOST")
+	port, _ := strconv.Atoi(os.Getenv("DB_PORT"))
+	user := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	database := os.Getenv("DB_NAME")
 
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Fatal("Can't find the file config.yaml : ", err)
+	return &DatabaseConfig{
+		Host:     host,
+		Port:     port,
+		User:     user,
+		Password: password,
+		Database: database,
 	}
-
-	err = viper.Unmarshal(&config)
-	if err != nil {
-		log.Fatal("Environment can't be loaded: ", err)
-	}
-	return &config
 }

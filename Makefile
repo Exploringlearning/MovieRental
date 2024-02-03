@@ -14,6 +14,8 @@ run-without-build:
 run: build
 	./${BINARY_DIRECTORY}
 
+test: unit-test integration-test
+
 unit-test:
 	go test ./internal/...
 
