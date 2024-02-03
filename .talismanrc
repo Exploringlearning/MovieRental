@@ -1,6 +1,6 @@
 fileignoreconfig:
 - filename: .env
-  checksum: 3c70dc0fb896f8989f909801556cf1b288b7abac3dfebde615cb8eebdbf987b5
+  checksum: 1f59b66af4bb162ff86e794f26ece2e001fd790a97d0264777c4cc358ae22fcc
 - filename: cmd/main.go
   checksum: 1843f09ca23274590386fd2625aa65fe4090fbb47afaf846b31a78f8ee814fe3
 - filename: configs/config.yaml
@@ -21,4 +21,6 @@ fileignoreconfig:
   checksum: 51c0e6643a16fc090fcd3bc5838eb25bf7eaed719ce92196767530bf1282ced1
 - filename: scripts/run_in_container.sh
   checksum: 3370ddf3ecef5bc3a9a1dca3872e1a8948ae95f05a0e4fe450a659a1a7c96bc2
+- filename: scripts/setup_db.sh
+  checksum: 75ec8d4ec0145092c1800da51a9bbbb1111ae6f582811e8876bbc0046b6d1921
 version: "1.0"

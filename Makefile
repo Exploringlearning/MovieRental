@@ -11,7 +11,7 @@ build:
 run-without-build:
 	go run cmd/main.go
 
-run: build
+run:
 	./${BINARY_DIRECTORY}
 
 test: unit-test integration-test
@@ -29,8 +29,13 @@ clean:
 	go clean
 	rm ${BINARY_DIRECTORY}
 
-run-in-container:
-	sh ./scripts/run_in_container.sh
+run-container:
+	sh ./scripts/run_container.sh
 
+setup-db:
+	sh ./scripts/setup_db.sh
+
+kill-containers:
+	sh ./scripts/kill_containers.sh
 
 .PHONY: build test
