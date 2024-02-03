@@ -19,4 +19,6 @@ fileignoreconfig:
   checksum: ee33f8612eda0b170b4aa95dfecfcdcb361e8990920f57639a9cb4ea3855a07a
 - filename: internal/services/rentalService.go
   checksum: 51c0e6643a16fc090fcd3bc5838eb25bf7eaed719ce92196767530bf1282ced1
+- filename: scripts/run_in_container.sh
+  checksum: 3370ddf3ecef5bc3a9a1dca3872e1a8948ae95f05a0e4fe450a659a1a7c96bc2
 version: "1.0"

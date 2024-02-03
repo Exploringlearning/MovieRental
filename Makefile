@@ -28,3 +28,9 @@ dep:
 clean:
 	go clean
 	rm ${BINARY_DIRECTORY}
+
+run-in-container:
+	sh ./scripts/run_in_container.sh
+
+
+.PHONY: build test
