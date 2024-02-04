@@ -1,12 +1,14 @@
 package handler
 
 import (
+	"github.com/pkg/errors"
 	"movierental/internal/dto"
 	"movierental/internal/repository/mocks"
 	"movierental/internal/services"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +31,8 @@ func setup() {
 	handler = NewMovie(service)
 
 	engine.GET("/movies", handler.Get)
-	engine.GET("movie/filter", handler.GetMoviesByFilter)
+	engine.GET("/movies/filter", handler.GetMoviesByFilter)
+	engine.GET("/movie/:id", handler.Get)
 
 }
 
@@ -163,7 +166,7 @@ func TestShouldReturnMoviesFilterByGenre(t *testing.T) {
 
 	mockRepo.On("GetMoviesByFilter", genre, "", "").Return(movies, nil)
 
-	url := "/movie/filter?genre=" + genre
+	url := "/movies/filter?genre=" + genre
 	response := getResponse(t, url)
 
 	var responseBody []dto.Movie
@@ -217,7 +220,7 @@ func TestShouldReturnMoviesFilterByGenreAndYear(t *testing.T) {
 
 	mockRepo.On("GetMoviesByFilter", genre, year, "").Return(movies, nil)
 
-	url := "/movie/filter?genre=" + genre + "&year=" + year
+	url := "/movies/filter?genre=" + genre + "&year=" + year
 	response := getResponse(t, url)
 
 	var responseBody []dto.Movie
@@ -272,7 +275,7 @@ func TestShouldReturnMoviesFilterByGenreAndYearAndActor(t *testing.T) {
 
 	mockRepo.On("GetMoviesByFilter", genre, year, actor).Return(movies, nil)
 
-	url := "/movie/filter?genre=" + genre + "&year=" + year + "&actor=" + actor
+	url := "/movies/filter?genre=" + genre + "&year=" + year + "&actor=" + actor
 	response := getResponse(t, url)
 
 	var responseBody []dto.Movie
@@ -282,6 +285,92 @@ func TestShouldReturnMoviesFilterByGenreAndYearAndActor(t *testing.T) {
 	assert.Equal(t, http.StatusOK, response.Code)
 	assert.Equal(t, movies, responseBody)
 	mockRepo.AssertCalled(t, "GetMoviesByFilter", genre, year, actor)
+}
+
+func TestShouldReturnMovieForAGivenMovieID(t *testing.T) {
+	movieDTO := dto.Movie{
+		ID:       1,
+		Title:    "The Wolf of Wall Street",
+		Year:     "2013",
+		Rated:    "R",
+		Released: "25 Dec 2013",
+		Runtime:  "180 min",
+		Genre:    "Biography, Comedy, Crime",
+		Director: "Martin Scorsese",
+		Writer:   "Terence Winter, Jordan Belfort",
+		Actors:   "Leonardo DiCaprio, Jonah Hill, Margot Robbie",
+		Plot:     "In the early 1990s, Jordan Belfort teamed with his partner Donny Azoff and started brokerage firm Stratton Oakmont...",
+		Language: "English, French",
+		Country:  "United States",
+		Awards:   "Nominated for 5 Oscars. 37 wins & 179 nominations total",
+		Poster:   "https://m.media-amazon.com/images/M/MV5BMjIxMjgxNTk0MF5BMl5BanBnXkFtZTgwNjIyOTg2MDE@._V1_SX300.jpg",
+		Ratings: []dto.Rating{
+			{
+				Source: "Internet Movie Database",
+				Value:  "8.2/10",
+			},
+		},
+		Metascore:  "75",
+		ImdbRating: "8.2",
+		ImdbVotes:  "1,545,718",
+		ImdbID:     "tt0993846",
+		Type:       "movie",
+		DVD:        "12 Dec 2015",
+		BoxOffice:  "$116,900,694",
+		Production: "N/A",
+		Website:    "N/A",
+		Response:   "True",
+	}
+
+	movieID := 1
+
+	mockRepo.On("Get", movieID).Return(movieDTO, nil)
+
+	url := "/movie/" + strconv.Itoa(movieID)
+	response := getResponse(t, url)
+
+	var responseBody dto.Movie
+	err := json.NewDecoder(response.Body).Decode(&responseBody)
+	require.NoError(t, err)
+
+	assert.Equal(t, http.StatusOK, response.Code)
+	assert.Equal(t, movieDTO, responseBody)
+	mockRepo.AssertCalled(t, "Get", movieID)
+}
+
+func TestShouldReturnErrorWhenMovieNotFound(t *testing.T) {
+	movieID := 0
+
+	mockRepo.On("Get", movieID).Return(dto.Movie{}, errors.New("movie not found"))
+
+	url := "/movie/" + strconv.Itoa(movieID)
+	response := getResponse(t, url)
+
+	var responseBody map[string]string
+	err := json.NewDecoder(response.Body).Decode(&responseBody)
+	require.NoError(t, err)
+
+	expectedResponse := map[string]string{"error": "movie not found"}
+
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
+	assert.Equal(t, expectedResponse, responseBody)
+	mockRepo.AssertCalled(t, "Get", movieID)
+}
+
+func TestShouldReturnErrorWhenInvalidIdIsGiven(t *testing.T) {
+	movieID := "a"
+
+	url := "/movie/" + movieID
+	response := getResponse(t, url)
+
+	var responseBody map[string]string
+	err := json.NewDecoder(response.Body).Decode(&responseBody)
+	require.NoError(t, err)
+
+	expectedResponse := map[string]string{"error": "movie id should be an integer"}
+
+	assert.Equal(t, http.StatusInternalServerError, response.Code)
+	assert.Equal(t, expectedResponse, responseBody)
 }
 
 func getResponse(t *testing.T, url string) *httptest.ResponseRecorder {

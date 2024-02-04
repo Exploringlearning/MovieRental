@@ -19,5 +19,6 @@ func RegisterRoutes(engine *gin.Engine) {
 	{
 		group.GET("/movies", movieHandler.Get)
 		group.GET("/movies/filter", movieHandler.GetMoviesByFilter)
+		group.GET("/movie/:id", movieHandler.Get)
 	}
 }

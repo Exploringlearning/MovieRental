@@ -6,7 +6,8 @@ import (
 )
 
 type Movie interface {
-	Get() ([]dto.Movie, error)
+	Get(id int) (dto.Movie, error)
+	GetAll() ([]dto.Movie, error)
 	GetMoviesByFilter(string, string, string) ([]dto.Movie, error)
 }
 
@@ -18,7 +19,15 @@ func NewMovie(rentalRepository repository.Movie) Movie {
 	return &movie{rentalRepository: rentalRepository}
 }
 
-func (movie *movie) Get() ([]dto.Movie, error) {
+func (movie *movie) Get(id int) (dto.Movie, error) {
+	rentalMovie, err := movie.rentalRepository.Get(id)
+	if err != nil {
+		return dto.Movie{}, err
+	}
+	return rentalMovie, nil
+}
+
+func (movie *movie) GetAll() ([]dto.Movie, error) {
 	movies, err := movie.rentalRepository.GetAll()
 	if err != nil {
 		return nil, err

@@ -13,6 +13,34 @@ type Movie struct {
 	mock.Mock
 }
 
+// Get provides a mock function with given fields: id
+func (_m *Movie) Get(id int) (dto.Movie, error) {
+	ret := _m.Called(id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
+	var r0 dto.Movie
+	var r1 error
+	if rf, ok := ret.Get(0).(func(int) (dto.Movie, error)); ok {
+		return rf(id)
+	}
+	if rf, ok := ret.Get(0).(func(int) dto.Movie); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Get(0).(dto.Movie)
+	}
+
+	if rf, ok := ret.Get(1).(func(int) error); ok {
+		r1 = rf(id)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // GetAll provides a mock function with given fields:
 func (_m *Movie) GetAll() ([]dto.Movie, error) {
 	ret := _m.Called()

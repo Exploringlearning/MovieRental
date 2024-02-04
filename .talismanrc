@@ -16,7 +16,7 @@ fileignoreconfig:
 - filename: internal/db/migrations/20240201150040_insert_table_movies.up.sql
   checksum: b4df3b7745a1d5f1c4ab865744c0e87e200c95e5d30c48373cadacd409f995b0
 - filename: internal/handler/rentalHandler_test.go
-  checksum: 5abc632cf5a255c66c5cf3d185fd1aaaec325edea13b8659cc1229a26c551b13
+  checksum: 986a15dc7caa3f353a4e6b185d4e70d290f77457f29ac154fca89b151dcadcde
 - filename: internal/services/rentalService.go
   checksum: 51c0e6643a16fc090fcd3bc5838eb25bf7eaed719ce92196767530bf1282ced1
 - filename: scripts/run_in_container.sh

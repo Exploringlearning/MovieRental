@@ -2,6 +2,7 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"log"
 	"movierental/internal/dto"
@@ -10,6 +11,7 @@ import (
 type Movie interface {
 	GetAll() ([]dto.Movie, error)
 	GetMoviesByFilter(string, string, string) ([]dto.Movie, error)
+	Get(id int) (dto.Movie, error)
 }
 
 type movie struct {
@@ -18,6 +20,28 @@ type movie struct {
 
 func NewMovie(db *sql.DB) Movie {
 	return &movie{db}
+}
+
+func (m *movie) Get(id int) (dto.Movie, error) {
+
+	query := fmt.Sprintf("SELECT * FROM Movies where id=%d", id)
+
+	rows, err := m.DB.Query(query)
+	if err != nil {
+		log.Println("Error occurred while fetching the movie from database", err.Error())
+		return dto.Movie{}, err
+	}
+
+	movies, err := m.scanMovie(rows)
+	if err != nil {
+		return dto.Movie{}, err
+	}
+
+	if len(movies) == 0 {
+		return dto.Movie{}, errors.New("movie not found")
+	}
+
+	return movies[0], nil
 }
 
 func (m *movie) GetAll() ([]dto.Movie, error) {
