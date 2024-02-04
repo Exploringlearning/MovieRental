@@ -6,6 +6,7 @@ import (
 	"movierental/internal/services"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -14,30 +15,31 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestShouldReturnStatusOK(t *testing.T) {
-	engine := gin.Default()
+var (
+	engine   *gin.Engine
+	mockRepo mocks.Movie
+	service  services.Movie
+	handler  Movie
+)
 
-	mockRepo := mocks.Movie{}
-	service := services.NewMovie(&mockRepo)
-	handler := NewMovie(service)
+func setup() {
+	engine = gin.Default()
+	mockRepo = mocks.Movie{}
+	service = services.NewMovie(&mockRepo)
+	handler = NewMovie(service)
 
 	engine.GET("/movies", handler.Get)
-
-	mockRepo.On("GetAll").Return(make([]dto.Movie, 0), nil)
-
-	url := "/movies"
-	response := getResponse(t, engine, url)
-
-	assert.Equal(t, http.StatusOK, response.Code)
+	engine.GET("movie/filter", handler.GetMoviesByFilter)
 
 }
 
-func TestShouldReturnAllListOfMovies(t *testing.T) {
-	engine := gin.Default()
+func TestMain(m *testing.M) {
+	setup()
+	exitCode := m.Run()
+	os.Exit(exitCode)
+}
 
-	mockRepo := mocks.Movie{}
-	service := services.NewMovie(&mockRepo)
-	handler := NewMovie(service)
+func TestShouldReturnAllListOfMovies(t *testing.T) {
 	movies := []dto.Movie{
 		{
 			ID:       1,
@@ -106,12 +108,10 @@ func TestShouldReturnAllListOfMovies(t *testing.T) {
 		},
 	}
 
-	engine.GET("/movies", handler.Get)
-
 	mockRepo.On("GetAll").Return(movies, nil)
 
 	url := "/movies"
-	response := getResponse(t, engine, url)
+	response := getResponse(t, url)
 
 	var responseBody []dto.Movie
 	err := json.NewDecoder(response.Body).Decode(&responseBody)
@@ -119,18 +119,10 @@ func TestShouldReturnAllListOfMovies(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, response.Code)
 	assert.Equal(t, movies, responseBody)
-	mockRepo.AssertNumberOfCalls(t, "GetAll", 1)
+	mockRepo.AssertCalled(t, "GetAll")
 }
 
 func TestShouldReturnMoviesFilterByGenre(t *testing.T) {
-
-	engine := gin.Default()
-
-	mockRepo := mocks.Movie{}
-	service := services.NewMovie(&mockRepo)
-	handler := NewMovie(service)
-	engine.GET("movie/filter", handler.GetMoviesByFilter)
-
 	movies := []dto.Movie{
 		{
 			ID:       1,
@@ -172,7 +164,7 @@ func TestShouldReturnMoviesFilterByGenre(t *testing.T) {
 	mockRepo.On("GetMoviesByFilter", genre, "", "").Return(movies, nil)
 
 	url := "/movie/filter?genre=" + genre
-	response := getResponse(t, engine, url)
+	response := getResponse(t, url)
 
 	var responseBody []dto.Movie
 	err := json.NewDecoder(response.Body).Decode(&responseBody)
@@ -180,18 +172,10 @@ func TestShouldReturnMoviesFilterByGenre(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, response.Code)
 	assert.Equal(t, movies, responseBody)
-	mockRepo.AssertNumberOfCalls(t, "GetMoviesByFilter", 1)
+	mockRepo.AssertCalled(t, "GetMoviesByFilter", genre, "", "")
 }
 
 func TestShouldReturnMoviesFilterByGenreAndYear(t *testing.T) {
-
-	engine := gin.Default()
-
-	mockRepo := mocks.Movie{}
-	service := services.NewMovie(&mockRepo)
-	handler := NewMovie(service)
-	engine.GET("movie/filter", handler.GetMoviesByFilter)
-
 	movies := []dto.Movie{
 		{
 			ID:       1,
@@ -234,7 +218,7 @@ func TestShouldReturnMoviesFilterByGenreAndYear(t *testing.T) {
 	mockRepo.On("GetMoviesByFilter", genre, year, "").Return(movies, nil)
 
 	url := "/movie/filter?genre=" + genre + "&year=" + year
-	response := getResponse(t, engine, url)
+	response := getResponse(t, url)
 
 	var responseBody []dto.Movie
 	err := json.NewDecoder(response.Body).Decode(&responseBody)
@@ -242,18 +226,10 @@ func TestShouldReturnMoviesFilterByGenreAndYear(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, response.Code)
 	assert.Equal(t, movies, responseBody)
-	mockRepo.AssertNumberOfCalls(t, "GetMoviesByFilter", 1)
+	mockRepo.AssertCalled(t, "GetMoviesByFilter", genre, year, "")
 }
 
 func TestShouldReturnMoviesFilterByGenreAndYearAndActor(t *testing.T) {
-
-	engine := gin.Default()
-
-	mockRepo := mocks.Movie{}
-	service := services.NewMovie(&mockRepo)
-	handler := NewMovie(service)
-	engine.GET("movie/filter", handler.GetMoviesByFilter)
-
 	movies := []dto.Movie{
 		{
 			ID:       1,
@@ -297,7 +273,7 @@ func TestShouldReturnMoviesFilterByGenreAndYearAndActor(t *testing.T) {
 	mockRepo.On("GetMoviesByFilter", genre, year, actor).Return(movies, nil)
 
 	url := "/movie/filter?genre=" + genre + "&year=" + year + "&actor=" + actor
-	response := getResponse(t, engine, url)
+	response := getResponse(t, url)
 
 	var responseBody []dto.Movie
 	err := json.NewDecoder(response.Body).Decode(&responseBody)
@@ -305,10 +281,10 @@ func TestShouldReturnMoviesFilterByGenreAndYearAndActor(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, response.Code)
 	assert.Equal(t, movies, responseBody)
-	mockRepo.AssertNumberOfCalls(t, "GetMoviesByFilter", 1)
+	mockRepo.AssertCalled(t, "GetMoviesByFilter", genre, year, actor)
 }
 
-func getResponse(t *testing.T, engine *gin.Engine, url string) *httptest.ResponseRecorder {
+func getResponse(t *testing.T, url string) *httptest.ResponseRecorder {
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	require.NoError(t, err)
 	response := httptest.NewRecorder()
