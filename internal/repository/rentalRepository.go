@@ -2,13 +2,14 @@ package repository
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"movierental/internal/dto"
 )
 
 type Movie interface {
 	GetAll() ([]dto.Movie, error)
-	GetMoviesByFilter(string) ([]dto.Movie, error)
+	GetMoviesByFilter(string, string, string) ([]dto.Movie, error)
 }
 
 type movie struct {
@@ -35,9 +36,11 @@ func (m *movie) GetAll() ([]dto.Movie, error) {
 	return movies, nil
 }
 
-func (m *movie) GetMoviesByFilter(genre string)([]dto.Movie, error){
-	
-	rows, err := m.DB.Query("SELECT * from movies where genre = ?",genre)
+func (m *movie) GetMoviesByFilter(genre string, year string, actor string) ([]dto.Movie, error) {
+
+	query := getQueryForFilter(genre, year, actor)
+
+	rows, err := m.DB.Query(query)
 
 	if err != nil {
 		log.Println("Error occurred while fetching movies from database", err.Error())
@@ -48,9 +51,35 @@ func (m *movie) GetMoviesByFilter(genre string)([]dto.Movie, error){
 	movies, err := m.scanMovie(rows)
 	if err != nil {
 		return nil, err
-	}	
+	}
 
-	return movies,nil
+	return movies, nil
+}
+
+func getQueryForFilter(genre string, year string, actor string) string {
+	query := "SELECT * FROM MOVIES WHERE"
+
+	var conditions []string
+
+	if genre != "" {
+		conditions = append(conditions, fmt.Sprintf(" genre ILIKE '%s' ", wrapInPercentage(genre)))
+	}
+
+	if year != "" {
+		conditions = append(conditions, fmt.Sprintf(" year = '%s' ", year))
+	}
+
+	if actor != "" {
+		conditions = append(conditions, fmt.Sprintf(" actor ILIKE '%s' ", wrapInPercentage(actor)))
+	}
+
+	for i := 0; i < len(conditions); i++ {
+		query += conditions[i]
+		if i < len(conditions)-1 {
+			query += "AND"
+		}
+	}
+	return query
 }
 
 func (m *movie) scanMovie(rows *sql.Rows) ([]dto.Movie, error) {
@@ -91,4 +120,8 @@ func (m *movie) scanMovie(rows *sql.Rows) ([]dto.Movie, error) {
 		movies = append(movies, movie)
 	}
 	return movies, nil
+}
+
+func wrapInPercentage(str string) string {
+	return "%" + str + "%"
 }

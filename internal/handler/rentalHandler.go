@@ -31,13 +31,13 @@ func (movie *movie) Get(context *gin.Context) {
 
 func (movie *movie) GetMoviesByFilter(context *gin.Context) {
 	genre := context.Query("genre")
-	// actor :=context.Query("actor")
-	// year := context.Query("year")
+	actor := context.Query("actor")
+	year := context.Query("year")
 
-	movies, err := movie.rentalService.GetMoviesByFilter(genre)
-    if err!= nil {
+	movies, err := movie.rentalService.GetMoviesByFilter(genre, year, actor)
+	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return 
-    }
-    context.JSON(http.StatusOK,movies)
+		return
+	}
+	context.JSON(http.StatusOK, movies)
 }
