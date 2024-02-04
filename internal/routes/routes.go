@@ -14,6 +14,10 @@ func RegisterRoutes(engine *gin.Engine) {
 	movieRepository := repository.NewMovie(dbConnection)
 	movieService := services.NewMovie(movieRepository)
 	movieHandler := handler.NewMovie(movieService)
-	engine.GET("/movierental", movieHandler.Get)
-	engine.GET("/movierental/filter", movieHandler.GetMoviesByFilter)
+
+	group := engine.Group("/movierental")
+	{
+		group.GET("/movies", movieHandler.Get)
+		group.GET("/movies/filter", movieHandler.GetMoviesByFilter)
+	}
 }
