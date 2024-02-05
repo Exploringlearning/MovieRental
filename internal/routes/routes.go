@@ -9,6 +9,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func InitRouter() *gin.Engine {
+	engine := gin.Default()
+	RegisterRoutes(engine)
+	return engine
+}
+
 func RegisterRoutes(engine *gin.Engine) {
 	dbConnection := db.SetUp()
 	movieRepository := repository.NewMovie(dbConnection)

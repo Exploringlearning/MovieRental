@@ -14,7 +14,7 @@ import (
 
 func SetUp() *sql.DB {
 	dbConn := CreateConnection()
-	Migrate(dbConn)
+	Migrate(dbConn, "file://internal/db/migrations")
 	return dbConn
 }
 
@@ -41,13 +41,13 @@ func CreateConnection() *sql.DB {
 	return dbConn
 }
 
-func Migrate(dbConn *sql.DB) error {
+func Migrate(dbConn *sql.DB, filePath string) error {
 	driver, err := postgres.WithInstance(dbConn, &postgres.Config{})
 	if err != nil {
 		log.Println("Driver not instantiated ", err)
 		return err
 	}
-	m, err := migrate.NewWithDatabaseInstance("file://internal/db/migrations", NewDatabaseConfig().Database, driver)
+	m, err := migrate.NewWithDatabaseInstance(filePath, NewDatabaseConfig().Database, driver)
 	if err != nil {
 		log.Fatalln("Migration with Database not instantiated ", err)
 		return err
